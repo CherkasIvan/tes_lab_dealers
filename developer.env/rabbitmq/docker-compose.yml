@@ -1,0 +1,28 @@
+version: '3.7'
+
+services:
+  rabbit-mq:
+    container_name: rabbit-mq
+    build: ./rabbitmq
+    hostname: rabbit.dev
+    restart: always
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER:-radmin}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS:-123456}
+      RABBITMQ_DEFAULT_VHOST: ${RABBITMQ_DEFAULT_VHOST:-rabbitMq}
+      RABBITMQ_ERLANG_COOKIE: ${RABBITMQ_ERLANG_COOKIE:-SWQOKODSQALRPCLNMEQG}
+      RABBITMQ_LOG_BASE : /var/log/rabbitmq
+      RABBITMQ_MNESIA_BASE: /var/lib/rabbitmq
+      RABBITMQ_SCHEMA_DIR: /var/lib/rabbitmq
+    volumes:
+      - data:/var/lib/rabbitmq
+      - dataLogs:/var/log/rabbitmq
+    ports:
+      - "4369:4369"
+      - "5672:5672"
+      - "15672:15672"
+      - "25672:25672"
+      - "35197:35197"
+volumes:
+  data:
+  dataLogs:

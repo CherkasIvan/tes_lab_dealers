@@ -1,0 +1,8 @@
+<config>
+    <user>default</user>
+    <password></password>
+    <secure>False</secure>
+    <host>192.168.111.66</host>
+    <port>9000</port>
+    <database>mta_tst</database>
+</config>

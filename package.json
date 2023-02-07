@@ -1,0 +1,140 @@
+{
+  "name": "dealers",
+  "version": "0.0.54",
+  "description": "",
+  "author": "",
+  "private": true,
+  "license": "UNLICENSED",
+  "scripts": {
+    "prebuild": "rimraf dist",
+    "build": "nest build srv",
+    "format": "prettier --write \"apps/**/*.ts\" \"libs/**/*.ts\"",
+    "start:srv": "rimraf dist/apps/srv && nest start srv",
+    "start:dev:srv": "nest start srv --watch",
+    "start:srv:debug": "nest start srv --watch --debug",
+    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
+    "migrate": "ts-node node_modules/node-pg-migrate/bin/node-pg-migrate --migration-file-language ts -d DATABASE_URL",
+    "migrate:up": "yarn run migrate up",
+    "migrate:up:1step": "yarn run migrate up 1",
+    "migrate:down:1step": "yarn run migrate down 1",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:cov": "jest --coverage",
+    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
+    "test:e2e": "jest --config ./apps/srv/test/jest-e2e.json",
+    "prepare": "husky install",
+    "docs:gen": "npx @compodoc/compodoc -p tsconfig.json -s",
+    "docs:cov:srv": "compodoc apps/srv/src -p tsconfig.json --coverageTest"
+  },
+  "dependencies": {
+    "@faker-js/faker": "^7.5.0",
+    "@golevelup/nestjs-rabbitmq": "1.22.0",
+    "@mobility/amqp-contracts": "git+ssh://git@bitbucket.org:mobilityhyundaibitprem/amqp-contracts.git#2.9.13",
+    "@mobility/apps-dto": "git+ssh://git@bitbucket.org/mobilityhyundaibitprem/apps-dto.git#1.51.4",
+    "@nestjs/axios": "^0.1.0",
+    "@nestjs/common": "^9.0.11",
+    "@nestjs/config": "^2.2.0",
+    "@nestjs/core": "^9.0.11",
+    "@nestjs/cqrs": "^9.0.1",
+    "@nestjs/platform-express": "^9.0.11",
+    "@nestjs/schedule": "^2.1.0",
+    "@nestjs/swagger": "^6.0.5",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.13.2",
+    "clickhouse": "^2.5.0",
+    "cls-hooked": "^4.2.2",
+    "compression": "^1.7.4",
+    "csv-parse": "^5.3.0",
+    "dotenv": "^16.0.1",
+    "error-stack-parser": "^2.1.4",
+    "moment": "^2.29.4",
+    "mongodb": "^4.8.1",
+    "nest-winston": "^1.7.0",
+    "node-pg-migrate": "^6.2.1",
+    "pg": "^8.7.3",
+    "reflect-metadata": "^0.1.13",
+    "protobufjs": "^7.1.2",
+    "rimraf": "^3.0.2",
+    "rxjs": "^7.5.4",
+    "uuid": "9.0.0-beta.0",
+    "winston": "^3.8.1"
+  },
+  "devDependencies": {
+    "@compodoc/compodoc": "^1.1.19",
+    "@nestjs/cli": "^9.0.0",
+    "@nestjs/schematics": "^9.0.1",
+    "@nestjs/testing": "^9.0.11",
+    "@types/amqplib": "^0.8.2",
+    "@types/cls-hooked": "^4.3.3",
+    "@types/compression": "^1.7.2",
+    "@types/cron": "^2.0.0",
+    "@types/express": "^4.17.13",
+    "@types/jest": "^26.0.24",
+    "@types/lodash": "^4.14.185",
+    "@types/multer": "^1.4.7",
+    "@types/node": "16.11.7",
+    "@types/pg": "^8.6.4",
+    "@types/supertest": "^2.0.11",
+    "@types/uuid": "^8.3.4",
+    "@typescript-eslint/eslint-plugin": "^5.13.0",
+    "@typescript-eslint/parser": "^5.13.0",
+    "eslint": "~8.10.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "husky": "^7.0.4",
+    "jest": "27.0.6",
+    "lint-staged": "^12.3.5",
+    "prettier": "^2.5.1",
+    "supertest": "^6.2.2",
+    "ts-jest": "27.0.3",
+    "ts-loader": "^9.2.7",
+    "ts-node": "^10.6.0",
+    "tsconfig-paths": "^3.13.0",
+    "type-fest": "^2.19.0",
+    "typescript": "^4.2.3"
+  },
+  "engines": {
+    "node": ">=16.13.1",
+    "yarn": "~1.22.4"
+  },
+  "packageManager": "yarn@1.22.4",
+  "jest": {
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "ts"
+    ],
+    "rootDir": ".",
+    "testRegex": ".*\\.spec\\.ts$",
+    "transform": {
+      "^.+\\.(t|j)s$": "ts-jest"
+    },
+    "collectCoverageFrom": [
+      "**/*.(t|j)s"
+    ],
+    "coverageDirectory": "./coverage",
+    "testEnvironment": "node",
+    "roots": [
+      "<rootDir>/apps/",
+      "<rootDir>/libs/"
+    ],
+    "moduleNameMapper": {
+      "@app/common/(.*)": "<rootDir>/libs/common/src/$1",
+      "@app/common": "<rootDir>/libs/common/src",
+      "@app/db-entities/(.*)": "<rootDir>/libs/db-entities/src/$1",
+      "@app/db-entities": "<rootDir>/libs/db-entities/src",
+      "@app/domains/(.*)": "<rootDir>/libs/domains/src/$1",
+      "@app/domains": "<rootDir>/libs/domains/src",
+      "@app/drivers/(.*)": "<rootDir>/libs/drivers/src/$1",
+      "@app/drivers": "<rootDir>/libs/drivers/src",
+      "@app/entities/(.*)": "<rootDir>/libs/entities/src/$1",
+      "@app/entities": "<rootDir>/libs/entities/src"
+    }
+  },
+  "lint-staged": {
+    "*.ts": [
+      "prettier --write",
+      "eslint --fix"
+    ]
+  }
+}

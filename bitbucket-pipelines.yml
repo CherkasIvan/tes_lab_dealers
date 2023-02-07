@@ -1,0 +1,17 @@
+#  Template NodeJS build
+
+#  This template allows you to validate your NodeJS code.
+#  The workflow allows running tests and code linting on the default branch.
+
+image: node:16.13.1
+
+pipelines:
+  pull-requests:
+    '**':
+      - step:
+          name: Install and Build
+          caches:
+            - node
+          script:
+            - yarn install
+            - yarn build

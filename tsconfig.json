@@ -1,0 +1,51 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "strict": true,
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule" : true,
+    "target": "es2017",
+    "sourceMap": true,
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "incremental": true,
+    "skipLibCheck" : true,
+    "resolveJsonModule" : true,
+    "paths": {
+      "@app/common": [
+        "libs/common/src"
+      ],
+      "@app/common/*": [
+        "libs/common/src/*"
+      ],
+      "@app/drivers": [
+        "libs/drivers/src"
+      ],
+      "@app/drivers/*": [
+        "libs/drivers/src/*"
+      ],
+      "@app/domains": [
+        "libs/domains/src"
+      ],
+      "@app/domains/*": [
+        "libs/domains/src/*"
+      ],
+      "@app/entities": [
+        "libs/entities/src"
+      ],
+      "@app/entities/*": [
+        "libs/entities/src/*"
+      ],
+      "@app/db-entities": [
+        "libs/db-entities/src"
+      ],
+      "@app/db-entities/*": [
+        "libs/db-entities/src/*"
+      ]
+    }
+  }
+}
