@@ -8,9 +8,9 @@ import { CarSaleApplicationMapper } from './mappers/car-sale-application.mapper'
 @Injectable()
 export class CarSaleControllerService {
     constructor(private readonly carSaleService: CarSaleService, private readonly dealerService: DealersService) { }
-
-    async getActiveApplications(activeHours = 0): Promise<CarSaleApplicationDto[]> {
-        const result = await this.carSaleService.getAllActiveApplications(activeHours);
+    async getActiveApplications(activeHours = 0, page: number, onPage: number, sortDirection: 'asc' | 'desc', sortField: string): Promise<CarSaleApplicationDto[]> {
+        console.log(page, onPage);
+        const result = await this.carSaleService.getAllActiveApplications(activeHours, page, onPage, sortDirection, sortField);
         const vehicles = result.map((item) => new CarSaleApplicationMapper(item).getResponseModel());
         const applications = await Promise.all(vehicles.map(async item => {
             const vehicle = await this.dealerService.getVehicle(item.vin);

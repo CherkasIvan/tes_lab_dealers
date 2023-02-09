@@ -8,6 +8,7 @@ export class SortingRequestQueryDto {
     @IsOptional()
     sortDirection?: 'asc' | 'desc';
 
+    @ApiProperty({ description: 'Название поля для сортировки', required: false })
     @IsString()
     @IsOptional()
     sortField?: string;

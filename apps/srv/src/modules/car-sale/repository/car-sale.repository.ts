@@ -32,7 +32,7 @@ export class CarSaleRepository {
         return this.collection
             .find(filter, { sort: ['publicationDate', -1] })
             .skip(page * onPage)
-            .limit(onPage)
+            .limit(+onPage)
             .map((item) => new CarSaleVehicleModel(item))
             .toArray();
     }

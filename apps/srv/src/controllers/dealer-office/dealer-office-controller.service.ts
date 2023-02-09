@@ -25,6 +25,7 @@ import { DealerOfficeGetGeozonesRequestQueryParamsDto } from './dtos/dealer-offi
 import { DealerOfficeCarReportsV2RequestDto } from './dtos/dealer-office-car-reports-v2.request.dto';
 import { DealerOfficeGeozone } from '../../modules/dealers/interfaces/dealer-office-geozone.interface';
 import { VehicleArrayProtobuffed } from './protobuffed/vehicle-item.protobuffed';
+import { DealerOfficeVehiclesFullPaginationRequestDto } from './dtos/dealer-office-vehicles-full-pagination.request.dto';
 
 @Injectable()
 export class DealerOfficeControllerService {
@@ -77,7 +78,7 @@ export class DealerOfficeControllerService {
         query: DealerOfficeVehiclesFullRequestDto,
     ): Promise<DealersDealerOfficeVehiclesFullGetEndpoint.ResponseData> {
         const result: DealersUncompressedVehiclesFullResponse = await this.dealerService
-            .getAllDealerVehicles({ dealerOfficeIds: query.dealerOffices, dealerSapCodes: query.dealers })
+            .getAllDealerVehicles({ dealerOfficeIds: query.dealerOffices, dealerSapCodes: query.dealers }, 0, 15)
             .then((vehicles$) =>
                 lastValueFrom(
                     vehicles$.pipe(
@@ -113,6 +114,48 @@ export class DealerOfficeControllerService {
         }
         return result;
     }
+
+    async getAllDealerVehiclesPagination(
+        query: DealerOfficeVehiclesFullPaginationRequestDto,
+    ): Promise<DealersDealerOfficeVehiclesFullGetEndpoint.ResponseData> {
+        const result: DealersUncompressedVehiclesFullResponse = await this.dealerService
+            .getAllDealerVehicles({ dealerOfficeIds: query.dealerOffices, dealerSapCodes: query.dealers }, query.page, query.onPage)
+            .then((vehicles$) =>
+                lastValueFrom(
+                    vehicles$.pipe(
+                        map((vehicle) => new FullVehicleModelMapper(vehicle).getResponseModel()),
+                        toArray(),
+                        map((vehicles) => ({
+                            vehicles,
+                        })),
+                    ),
+                ),
+            );
+        if (query.pack === 'csv-like') {
+            if (!result.vehicles.length) {
+                return {
+                    headers: [],
+                    rows: [],
+                };
+            }
+            const sample = result.vehicles[0];
+            const headers = Object.keys(sample);
+            const rows = result.vehicles.map((item) => Object.values(item));
+            return {
+                headers,
+                rows,
+            };
+        }
+        if (query.pack === 'protobuf') {
+            const response = new StreamableFile(
+                VehicleArrayProtobuffed.encode(result).finish(),
+            ) as unknown as DealersDealerOfficeVehiclesFullGetEndpoint.ResponseData;
+            console.log(response);
+            return response;
+        }
+        return result;
+    }
+
 
     async getVehicleInfo(vin: string): Promise<DealersDealerOfficeVehiclesVehicleGetEndpoint.ResponseData> {
         const vehicle = await this.dealerService.getVehicle(vin);

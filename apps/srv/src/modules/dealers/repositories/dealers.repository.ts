@@ -102,11 +102,13 @@ export class DealersRepository {
         return this.dealerOfficeCollection.findOne({ sapCode });
     }
 
-    async getDealerVehicles(parentSapCodes: string[], dealerOfficeSapCodes: string[]): Promise<Observable<Vehicle>> {
+    async getDealerVehicles(parentSapCodes: string[], dealerOfficeSapCodes: string[], page: number, onPage: number): Promise<Observable<Vehicle>> {
         let dealerOffices: string[] = [];
         if (parentSapCodes.length) {
             dealerOffices = await this.dealerOfficeCollection
                 .find({ parentSapCode: { $in: parentSapCodes } })
+                .skip(page * onPage)
+                .limit(onPage)
                 .map((dealerOffice) => new DealerOfficeModel(dealerOffice).sapCode)
                 .toArray();
         }

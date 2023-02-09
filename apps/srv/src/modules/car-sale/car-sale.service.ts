@@ -12,7 +12,7 @@ import { ApplicationProposalInterface } from './interfaces/application-proposal.
 import { GetProposalFiltersDto } from './dto/get-proposal-filters.dto';
 import { Filter } from 'mongodb';
 import { ApplicationProposalDto } from './dto/application-proposal.dto';
-
+import { orderBy } from 'lodash';
 @Injectable()
 export class CarSaleService {
     constructor(
@@ -66,11 +66,11 @@ export class CarSaleService {
         await this.notificationService.sendCarSaleMessage(model);
     }
 
-    async getAllActiveApplications(activeHours = 48): Promise<CarSaleVehicleModel[]> {
+    async getAllActiveApplications(activeHours = 48, page: number, onPage: number, sortDirection: 'asc' | 'desc', sortField: string): Promise<CarSaleVehicleModel[]> {
         const activeUntil = activeHours > 0 ? new Date(new Date().getTime() - 1000 * 60 * 60 * activeHours) : new Date(0);
         const filter = { isActive: true, publicationDate: { $gt: activeUntil } };
-        const count = await this.repository.count(filter);
-        return this.repository.findMany(filter, 0, count);
+        const application = await this.repository.findMany(filter, page, onPage);
+        return orderBy(application, sortField, sortDirection);
     }
 
     async addApplicationResponse(applicationId: string, proposal: ApplicationProposalInterface): Promise<ApplicationProposalInterface[]> {

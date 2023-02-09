@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Param, Post, Query, UseInterceptors } from '@nestjs/common';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { CarSaleControllerService } from './car-sale-controller.service';
 import { WrapResponseInterceptor } from '@app/common/interceptors/common-response-wrapper.interceptor';
 import { DealersCarSaleActiveApplicationsPostEndpoint, DealersCarSaleActiveApplicationsGetEndpoint, DealersControllersEnum } from '@mobility/apps-dto/dist/services/dealers';
@@ -13,10 +13,14 @@ import { ApplicationProposalInterface } from '../../modules/car-sale/interfaces/
 export class CarSaleController {
     constructor(private readonly service: CarSaleControllerService) { }
 
+    @ApiQuery({ name:'page', type: 'number' })
+    @ApiQuery({ name:'onPage', type: 'number' })
     @ApiOperation({ summary: 'Получение всех заявок на выкуп' })
     @Get(DealersCarSaleActiveApplicationsGetEndpoint.endPointPath)
     getActiveApplications(@Query() query: GetApplicationsDto): Promise<DealersCarSaleActiveApplicationsGetEndpoint.ResponseData> {
-        return this.service.getActiveApplications(query.activeHours);
+        const { activeHours, page, onPage, sortDirection, sortField  } = query;
+        console.log('some Dto' + ' ' + typeof sortDirection);
+        return this.service.getActiveApplications(activeHours, page, onPage, sortDirection || 'asc', sortField || 'vin');
     }
 
     @ApiOperation({ summary: 'Ответ на заявку' })

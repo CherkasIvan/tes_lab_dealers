@@ -34,6 +34,7 @@ import { DealerOfficeCarReportsRequestQeryParamsDto } from './dtos/dealer-office
 import { DealerOfficeGetGeozonesRequestQueryParamsDto } from './dtos/dealer-office-get-geozones.request.dto';
 import { DealerOfficeCarReportsV2RequestDto } from './dtos/dealer-office-car-reports-v2.request.dto';
 import { DealerOfficeGeozone } from '../../modules/dealers/interfaces/dealer-office-geozone.interface';
+import { DealerOfficeVehiclesFullPaginationRequestDto } from './dtos/dealer-office-vehicles-full-pagination.request.dto';
 
 @UseInterceptors(WrapResponseInterceptor)
 @ApiTags(DealersControllersEnum.DealerOffice)
@@ -41,11 +42,12 @@ import { DealerOfficeGeozone } from '../../modules/dealers/interfaces/dealer-off
 export class DealerOfficeController {
     constructor(private readonly controllerService: DealerOfficeControllerService) {}
 
-    @ApiOperation({ summary: 'Получение списка автомобилей дилера', deprecated: true })
-    @ApiQuery({ type: DealerOfficeVehiclesListRequestDto })
-    @Get(DealersDealerOfficeVehiclesGetEndpoint.endPointPath)
-    getVehicles(@Query() query: DealerOfficeVehiclesListRequestDto): Promise<DealersDealerOfficeVehiclesGetEndpoint.ResponseData> {
-        throw new NotImplementedException();
+    @ApiOperation({ summary: 'Получение полного списка автомобилей дилера с пагинацией/фильтрацией/сортировкой' })
+    @Get(DealersDealerOfficeVehiclesFullGetEndpoint.endPointPath + '-pagination')
+    async getAllVehiclesPagination(
+        @Query() query: DealerOfficeVehiclesFullPaginationRequestDto,
+    ): Promise<DealersDealerOfficeVehiclesFullGetEndpoint.ResponseData | void> {
+        return this.controllerService.getAllDealerVehiclesPagination(query);
     }
 
     @ApiOperation({ summary: 'Просмотр автомобиля' })

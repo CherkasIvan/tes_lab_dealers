@@ -200,8 +200,8 @@ export class DealersService {
             .subscribe();
     }
 
-    getAllDealerVehicles(filter: { dealerSapCodes?: string[]; dealerOfficeIds?: string[] }): Promise<Observable<Vehicle>> {
-        return this.dealerRepository.getDealerVehicles(filter.dealerSapCodes || [], filter.dealerOfficeIds || []);
+    getAllDealerVehicles(filter: { dealerSapCodes?: string[]; dealerOfficeIds?: string[] }, page: number, onPage: number): Promise<Observable<Vehicle>> {
+        return this.dealerRepository.getDealerVehicles(filter.dealerSapCodes || [], filter.dealerOfficeIds || [], page, onPage);
     }
 
     getVehicle(vin: string): Promise<Vehicle | null> {
@@ -238,7 +238,7 @@ export class DealersService {
 
     // eslint-disable-next-line max-lines-per-function
     async getCarReports(query: DealerOfficeCarReportsV2RequestDto): Promise<DealersDealerOfficeCarReportsV2PostEndpoint.ResponseData> {
-        const vehicleInfo = await this.getAllDealerVehicles({ dealerOfficeIds: query.dealerOffices, dealerSapCodes: query.dealers }).then(
+        const vehicleInfo = await this.getAllDealerVehicles({ dealerOfficeIds: query.dealerOffices, dealerSapCodes: query.dealers }, 0, 15).then(
             (vehicles$) =>
                 lastValueFrom(
                     vehicles$.pipe(
